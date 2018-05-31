@@ -64,7 +64,7 @@ public class UrlDown {
 				conn.setRequestMethod("GET");
 				conn.setConnectTimeout(1000*10);
 				//设置Range头用计算好的开始索引和结束索引到服务端请求数据
-				conn.setRequestProperty("Range", "byte="+startbyte+"-"+endbyte);
+				conn.setRequestProperty("Range", "bytes="+startbyte+"-"+endbyte);
 				if(conn.getResponseCode() == 206) {
 					InputStream inputStream = conn.getInputStream();
 					int len = -1;
