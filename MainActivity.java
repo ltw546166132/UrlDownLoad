@@ -1,4 +1,4 @@
-package com.example.androiddown;
+package com.example.androiddownload;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements OnClickListener{
 	//线程数
 	private int threadCount;
 	private int blockSize;
-	String path = "http://192.168.10.152:8080/api.zip";
+	String path = "http://10.0.2.2:8080/3ASiCNanjing.mp3";
 	private String fileAdress;
 
 	@Override
@@ -54,8 +54,6 @@ public class MainActivity extends Activity implements OnClickListener{
 		}
 		
 		new Thread(new Runnable() {
-			
-			
 
 			@Override
 			public void run() {
@@ -80,6 +78,7 @@ public class MainActivity extends Activity implements OnClickListener{
 								endindex = filelength-1;
 							}
 							ProgressBar pb = (ProgressBar) linear.getChildAt(i);
+							//设置进度条最大值
 							pb.setMax(endindex-startindex);
 							new Thread(new ThreadDown(startindex, endindex, i, pb)).start();
 						}
@@ -120,7 +119,6 @@ public class MainActivity extends Activity implements OnClickListener{
 					bfr = new BufferedReader(new InputStreamReader(fis));
 					String readLine = bfr.readLine();
 					beganIndex = Integer.parseInt(readLine);
-					
 				}
 				URL url = new URL(path);
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -143,12 +141,15 @@ public class MainActivity extends Activity implements OnClickListener{
 						count = len + count;
 						log = new RandomAccessFile(fileAdress+threadId+".log", "rwd");
 						log.write(String.valueOf(count).getBytes());
-						pb.setProgress(count+startbyte-threadId*blockSize);
+						//设置进度条当前值
+						pb.setProgress((startbyte+beganIndex)-threadId*blockSize+count);
+					}
+					if(temp!=null) {
+						temp.delete();
 					}
 					
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally {
 				try {
@@ -175,5 +176,4 @@ public class MainActivity extends Activity implements OnClickListener{
 		String filename = split[split.length-1];
 		return filename;
 	}
-	
 }
